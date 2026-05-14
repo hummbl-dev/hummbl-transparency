@@ -28,11 +28,9 @@ registry/
   diffs/            # Prompt change diffs with timestamps
 tools/
   audit_prompt.py   # Compare current prompt against registry
-  diff_vendor.py    # Diff two vendor prompt versions
   score_transparency.py  # Rate vendor transparency practices
 evidence/
-  screenshots/      # Visual evidence of prompt captures
-  transcripts/      # Full interaction transcripts
+  ...               # Source notes and capture references
 ```
 
 ## Principles
@@ -45,7 +43,17 @@ evidence/
 
 ## Status
 
-**v0.1 — BOOTSTRAP.** Registry structure established. Initial vendor entries and analysis tools forthcoming.
+**v0.1 — BOOTSTRAP COMPLETE.** The registry includes an initial
+Anthropic Claude Opus 4.7 transparency entry, model behavior documentation,
+schema-aware validation, prompt auditing, transparency scoring, and CI.
+
+Run local checks:
+
+```bash
+python tools/validate_registry.py
+python tools/audit_prompt.py registry/vendors/anthropic/claude-opus-4.7-2026-04-16.json
+python tools/score_transparency.py
+```
 
 ## Related
 

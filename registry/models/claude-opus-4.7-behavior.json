@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.1",
+  "entry_type": "model_behavior",
+  "vendor": "Anthropic",
+  "model": "Claude Opus 4.7",
+  "surface": "claude.ai and mobile apps",
+  "documented_at": "2026-05-14",
+  "dimensions": {
+    "freshness_context": "The documented system prompt supplies current-date context at conversation start.",
+    "formatting_behavior": "Anthropic states the prompt encourages behaviors such as providing code snippets in Markdown.",
+    "scope_boundary": "Anthropic states these system prompt updates do not apply to the Claude API."
+  },
+  "evidence": [
+    {
+      "type": "vendor_docs",
+      "url": "https://platform.claude.com/docs/en/release-notes/system-prompts",
+      "retrieved_at": "2026-05-14"
+    }
+  ],
+  "limitations": [
+    "Behavior observations are documentation-derived and should be supplemented with transcript evidence before use as an evaluation baseline."
+  ]
+}
