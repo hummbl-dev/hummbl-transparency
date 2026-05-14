@@ -29,3 +29,9 @@ jobs:
 
       - name: Run stdlib validation
         run: python tools/validate_registry.py
+
+      - name: Audit bootstrap prompt entry
+        run: python tools/audit_prompt.py registry/vendors/anthropic/claude-opus-4.7-2026-04-16.json
+
+      - name: Score transparency practices
+        run: python tools/score_transparency.py

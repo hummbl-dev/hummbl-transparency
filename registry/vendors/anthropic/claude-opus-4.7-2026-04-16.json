@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1",
+  "entry_type": "vendor_prompt",
+  "vendor": "Anthropic",
+  "product": "Claude",
+  "model": "Claude Opus 4.7",
+  "surface": "claude.ai and mobile apps",
+  "prompt_version": "2026-04-16",
+  "status": "published_by_vendor",
+  "captured_at": "2026-05-14",
+  "prompt_summary": "Anthropic documents the Claude Opus 4.7 web and mobile system prompt release dated 2026-04-16. The prompt provides current-date context and behavioral instructions for Claude web and mobile surfaces; Anthropic states these system prompt updates do not apply to the Claude API.",
+  "known_prompt_excerpt": "Claude's web interface and mobile apps use a system prompt to provide up-to-date information, such as the current date, to Claude at the start of every conversation.",
+  "transparency_practices": {
+    "publishes_system_prompt": true,
+    "versioned_prompt_history": true,
+    "change_highlighting": true,
+    "machine_readable_artifact": false,
+    "reproducible_capture_method": false
+  },
+  "evidence": [
+    {
+      "type": "vendor_docs",
+      "url": "https://platform.claude.com/docs/en/release-notes/system-prompts",
+      "retrieved_at": "2026-05-14",
+      "notes": "Vendor documentation lists Claude Opus 4.7 with an April 16, 2026 system prompt update and describes scope for Claude web and mobile apps."
+    },
+    {
+      "type": "local_note",
+      "path": "../../../evidence/anthropic-system-prompts-2026-04-16.md",
+      "retrieved_at": "2026-05-14",
+      "notes": "Local source note records the evidence basis used for this bootstrap entry."
+    }
+  ],
+  "limitations": [
+    "The registry stores a concise excerpt and evidence reference, not a full prompt mirror.",
+    "Entry covers Claude web and mobile system prompt documentation, not the Anthropic API."
+  ]
+}
