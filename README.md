@@ -4,12 +4,12 @@
 
 ## What this is
 
-A governed replacement for ad-hoc "leaked system prompt" collections. This registry:
+A governed replacement for ad-hoc "leaked system prompt" collections. The current bootstrap ships the validation harness and planned registry contract. The intended registry will:
 
 1. **Tracks vendor system prompts** — with version history, change diffs, and provenance evidence
 2. **Documents model behavior** — structured observations across safety, bias, refusal, and capability dimensions
 3. **Records prompt changes** — when vendors update system prompts, we capture the delta with timestamps and evidence
-4. **Provides analysis tools** — stdlib-only Python scripts for diffing, auditing, and comparing vendor transparency practices
+4. **Provide analysis tools** — stdlib-only Python scripts for diffing, auditing, and comparing vendor transparency practices
 
 ## Why this exists
 
@@ -18,22 +18,35 @@ The AI industry's transparency practices are inconsistent. Vendors change system
 ## Structure
 
 ```
-registry/
-  vendors/          # Per-vendor prompt archives with change history
-    anthropic/
-    openai/
-    google/
-    ...
-  models/           # Per-model behavior documentation
-  diffs/            # Prompt change diffs with timestamps
 tools/
-  audit_prompt.py   # Compare current prompt against registry
-  diff_vendor.py    # Diff two vendor prompt versions
-  score_transparency.py  # Rate vendor transparency practices
-evidence/
-  screenshots/      # Visual evidence of prompt captures
-  transcripts/      # Full interaction transcripts
+  validate_registry.py  # stdlib validation for JSON, Markdown links, and registry shape
 ```
+
+Planned registry layout:
+
+- `registry/vendors/` - per-vendor prompt archives with change history
+- `registry/models/` - per-model behavior documentation
+- `registry/diffs/` - prompt change diffs with timestamps
+- `evidence/screenshots/` - visual evidence of prompt captures
+- `evidence/transcripts/` - full interaction transcripts
+
+Planned analysis tools:
+
+- `tools/audit_prompt.py` - compare current prompt against registry
+- `tools/diff_vendor.py` - diff two vendor prompt versions
+- `tools/score_transparency.py` - rate vendor transparency practices
+
+## Validation
+
+```bash
+python tools/validate_registry.py
+```
+
+The validator is intentionally standard-library only and currently checks:
+
+- JSON parseability
+- local Markdown link integrity
+- future registry files live below a category directory
 
 ## Principles
 
@@ -45,7 +58,7 @@ evidence/
 
 ## Status
 
-**v0.1 — BOOTSTRAP.** Registry structure established. Initial vendor entries and analysis tools forthcoming.
+**v0.1 — BOOTSTRAP.** Validation harness established. Registry directories, initial vendor entries, evidence artifacts, and analysis tools are forthcoming.
 
 ## Related
 
