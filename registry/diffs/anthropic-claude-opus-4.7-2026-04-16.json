@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.1",
+  "entry_type": "prompt_diff",
+  "vendor": "Anthropic",
+  "model": "Claude Opus 4.7",
+  "from_version": null,
+  "to_version": "2026-04-16",
+  "captured_at": "2026-05-14",
+  "change_summary": "Initial registry baseline for the vendor-published Claude Opus 4.7 system prompt update.",
+  "evidence": [
+    {
+      "type": "vendor_docs",
+      "url": "https://platform.claude.com/docs/en/release-notes/system-prompts",
+      "retrieved_at": "2026-05-14"
+    }
+  ]
+}

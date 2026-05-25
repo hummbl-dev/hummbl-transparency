@@ -11,11 +11,46 @@ import json
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 REGISTRY_ROOT = REPO_ROOT / "registry"
 MARKDOWN_LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 REMOTE_SCHEMES = ("http://", "https://", "mailto:")
+REQUIRED_FIELDS = {
+    "vendor_prompt": {
+        "schema_version",
+        "entry_type",
+        "vendor",
+        "model",
+        "prompt_version",
+        "status",
+        "captured_at",
+        "prompt_summary",
+        "known_prompt_excerpt",
+        "transparency_practices",
+        "evidence",
+    },
+    "model_behavior": {
+        "schema_version",
+        "entry_type",
+        "vendor",
+        "model",
+        "documented_at",
+        "dimensions",
+        "evidence",
+    },
+    "prompt_diff": {
+        "schema_version",
+        "entry_type",
+        "vendor",
+        "model",
+        "to_version",
+        "captured_at",
+        "change_summary",
+        "evidence",
+    },
+}
 
 
 def _iter_files(suffix: str) -> list[Path]:
@@ -34,6 +69,16 @@ def _validate_json() -> list[str]:
         except Exception as exc:
             failures.append(f"{path.relative_to(REPO_ROOT)}: invalid JSON: {exc}")
     return failures
+
+
+def _load_json(path: Path) -> tuple[dict[str, Any] | None, str | None]:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return None, str(exc)
+    if not isinstance(data, dict):
+        return None, "top-level JSON value must be an object"
+    return data, None
 
 
 def _validate_markdown_links() -> list[str]:
@@ -82,11 +127,77 @@ def _validate_registry_shape() -> list[str]:
     return failures
 
 
+def _validate_registry_schemas() -> list[str]:
+    failures: list[str] = []
+    if not REGISTRY_ROOT.exists():
+        return ["registry/: missing registry root"]
+
+    for path in sorted(REGISTRY_ROOT.rglob("*.json")):
+        data, error = _load_json(path)
+        relative = path.relative_to(REPO_ROOT)
+        if error:
+            failures.append(f"{relative}: invalid JSON: {error}")
+            continue
+        assert data is not None
+
+        entry_type = data.get("entry_type")
+        if entry_type not in REQUIRED_FIELDS:
+            failures.append(f"{relative}: unsupported entry_type {entry_type!r}")
+            continue
+
+        missing = sorted(REQUIRED_FIELDS[entry_type] - data.keys())
+        if missing:
+            failures.append(f"{relative}: missing required fields {', '.join(missing)}")
+
+        evidence = data.get("evidence")
+        if not isinstance(evidence, list) or not evidence:
+            failures.append(f"{relative}: evidence must be a non-empty list")
+            continue
+
+        for index, item in enumerate(evidence):
+            if not isinstance(item, dict):
+                failures.append(f"{relative}: evidence[{index}] must be an object")
+                continue
+            if not (item.get("url") or item.get("path")):
+                failures.append(f"{relative}: evidence[{index}] needs url or path")
+            if item.get("path"):
+                target = (path.parent / str(item["path"])).resolve()
+                try:
+                    target.relative_to(REPO_ROOT)
+                except ValueError:
+                    failures.append(f"{relative}: evidence[{index}] path escapes repo")
+                    continue
+                if not target.exists():
+                    failures.append(
+                        f"{relative}: evidence[{index}] missing path {item['path']!r}"
+                    )
+
+        if entry_type == "vendor_prompt":
+            practices = data.get("transparency_practices")
+            if not isinstance(practices, dict):
+                failures.append(f"{relative}: transparency_practices must be an object")
+            else:
+                for practice in (
+                    "publishes_system_prompt",
+                    "versioned_prompt_history",
+                    "change_highlighting",
+                    "machine_readable_artifact",
+                    "reproducible_capture_method",
+                ):
+                    if not isinstance(practices.get(practice), bool):
+                        failures.append(
+                            f"{relative}: transparency_practices.{practice} must be boolean"
+                        )
+
+    return failures
+
+
 def main() -> int:
     failures = [
         *_validate_json(),
         *_validate_markdown_links(),
         *_validate_registry_shape(),
+        *_validate_registry_schemas(),
     ]
     if failures:
         for failure in failures:
