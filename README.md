@@ -21,17 +21,29 @@ The AI industry's transparency practices are inconsistent. Vendors change system
 registry/
   vendors/          # Per-vendor prompt archives with change history
     anthropic/
-    openai/
-    google/
-    ...
   models/           # Per-model behavior documentation
   diffs/            # Prompt change diffs with timestamps
 tools/
-  audit_prompt.py   # Compare current prompt against registry
+  validate_registry.py  # stdlib validation for JSON, Markdown links, and registry shape
+  audit_prompt.py       # Compare current prompt against registry
   score_transparency.py  # Rate vendor transparency practices
 evidence/
   ...               # Source notes and capture references
 ```
+
+## Validation
+
+```bash
+python tools/validate_registry.py
+python tools/audit_prompt.py registry/vendors/anthropic/claude-opus-4.7-2026-04-16.json
+python tools/score_transparency.py
+```
+
+The validator is intentionally standard-library only and currently checks:
+
+- JSON parseability
+- local Markdown link integrity
+- future registry files live below a category directory
 
 ## Principles
 
@@ -46,14 +58,6 @@ evidence/
 **v0.1 — BOOTSTRAP COMPLETE.** The registry includes an initial
 Anthropic Claude Opus 4.7 transparency entry, model behavior documentation,
 schema-aware validation, prompt auditing, transparency scoring, and CI.
-
-Run local checks:
-
-```bash
-python tools/validate_registry.py
-python tools/audit_prompt.py registry/vendors/anthropic/claude-opus-4.7-2026-04-16.json
-python tools/score_transparency.py
-```
 
 ## Related
 
